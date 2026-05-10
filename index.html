@@ -112,12 +112,12 @@ Figure&nbsp;1: Each dot is one shop-day (250 total). Orange = you were on site; 
 </div>
 </div>
 </div>
-<p><a href="#tbl-lift" class="quarto-xref">Table&nbsp;1</a> is the scorecard: for each shop, it compares <strong>cars finished on days you were not there</strong> vs <strong>days you were on site</strong>, then shows the <strong>difference</strong> as your estimated day-level impact.</p>
+<p><a href="#tbl-lift" class="quarto-xref">Table&nbsp;1</a> is the scorecard: for each shop, it compares <strong>cars finished on days you were not there</strong> vs <strong>days you were on site</strong>, then shows both the <strong>difference in cars/day</strong> and the <strong>percent increase</strong> as your estimated day-level impact.</p>
 <div class="cell" data-execution_count="2">
 <div id="tbl-lift" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="2">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lift-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Per shop: how many days fall in each bucket, average cars when you were away vs on site, and extra cars per day when you are there.
+Table&nbsp;1: Per shop: whole-number day counts, average cars when you were away vs on site, extra cars/day when you are there, and estimated percent increase.
 </figcaption>
 <div aria-describedby="tbl-lift-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -133,9 +133,11 @@ Table&nbsp;1: Per shop: how many days fall in each bucket, average cars when you
 <th data-quarto-table-cell-role="th">Days observed (you on site)</th>
 <th data-quarto-table-cell-role="th">Avg cars/day (you on site)</th>
 <th data-quarto-table-cell-role="th">Estimated extra cars/day when you are on site</th>
+<th data-quarto-table-cell-role="th">Estimated % increase when you are on site</th>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">shopID</th>
+<th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th"></th>
@@ -148,41 +150,46 @@ Table&nbsp;1: Per shop: how many days fall in each bucket, average cars when you
 <th data-quarto-table-cell-role="th">1</th>
 <td>40</td>
 <td>10</td>
-<td>11.05</td>
+<td>11</td>
 <td>18.00</td>
 <td>8.00</td>
+<td>80.00</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">2</th>
 <td>45</td>
 <td>5</td>
-<td>22.13</td>
+<td>22</td>
 <td>32.20</td>
 <td>27.20</td>
+<td>544.00</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">3</th>
 <td>35</td>
 <td>15</td>
-<td>32.46</td>
+<td>32</td>
 <td>35.40</td>
 <td>20.40</td>
+<td>136.00</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">4</th>
 <td>45</td>
 <td>5</td>
-<td>37.02</td>
+<td>37</td>
 <td>49.80</td>
 <td>44.80</td>
+<td>896.00</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">5</th>
 <td>35</td>
 <td>15</td>
-<td>45.51</td>
+<td>45</td>
 <td>53.73</td>
 <td>38.73</td>
+<td>258.22</td>
 </tr>
 </tbody>
 </table>
@@ -200,6 +207,7 @@ Table&nbsp;1: Per shop: how many days fall in each bucket, average cars when you
 <li><strong>Days observed (you on site):</strong> Number of shop-days where you were on site.</li>
 <li><strong>Avg cars/day (you on site):</strong> Average number of cars finished on on-site days.</li>
 <li><strong>Estimated extra cars/day when you are on site:</strong> Difference between the two averages above; positive means more cars were finished on days you were present.</li>
+<li><strong>Estimated % increase when you are on site:</strong> The extra cars/day divided by the not-on-site average, shown as a percentage.</li>
 </ul>
 <p><strong>How to read it:</strong> Shops <strong>4</strong> and <strong>2</strong> show the largest <strong>extra cars per day</strong> when you are there. Shop <strong>3</strong> shows a small bump. Again: small bump at 3 is about <strong>your impact when you visit</strong>, not whether the crew there is any good.</p>
 <hr>
