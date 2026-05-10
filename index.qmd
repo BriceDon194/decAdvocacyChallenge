@@ -1,6 +1,6 @@
 ---
 title: "Scheduling Report for Patrick"
-subtitle: "Where Your Presence Adds the Most Cars (and Revenue)"
+subtitle: "Where Showing Up Moves the Most Cars Through the Doors"
 format:
   html:
     toc: true
@@ -16,21 +16,29 @@ jupyter:
     display_name: "Python 3 (.venv)"
 ---
 
-## Executive summary
+## Executive summary 
 
-Patrick, you asked a simple question: **when you show up at one shop for the day, where does it pay off most?** This report uses 50 days of records across your five shops (250 shop‑days total). The clearest pattern: **Shops 4 and 2 jump the most when you are there.** Shop 3 moves the least—so if you love visiting your brother there, that is fine emotionally, but the numbers say it is not where you “buy” the most extra cars with your time.
+Patrick, you wanted to know: **if you spend a day at one location instead of another, where does your being there actually show up in the work count?**
 
-Because some shops have very few “boss present” days in the data, treat the exact numbers as **ballpark guides**, not guarantees. The charts show every single row we have, and the scenario chart translates the pattern into **what could change if you shift where you spend days.**
+We looked at **50 days** of records across **five shops**. Think of that as **250 separate snapshots**: each snapshot is “one shop, one day,” with how many cars got finished that day and whether you were on site.
+
+**What we found**
+
+- **Shops 4 and 2** are where your visits line up with the **biggest bump** in cars completed versus days you were not there.
+- **Shop 3** shows the **smallest bump**. That does **not** mean Shop 3 is a bad shop or that you should feel guilty. It means **your time on the floor has the least impact on number of serviced cars**, compared with 4 and 2.
+
+**How seriously to take the exact numbers**
+
+You were not recorded at every shop equally often. Some locations only have a few “Patrick was here” days in this file. So treat the figures as **rough guides**, not promises. They still tell a useful story about **where your presence shows up most**.
 
 ---
 
-## What the data shows
+## What we measured
 
-Each point in @fig-all-points is one shop‑day: cars fixed that day, split by whether you were there. Jitter and transparency keep all **250** points visible.
-
+Each dot in @fig-all-points is **one shop, one day**: how many cars were fixed that day, and whether you were there. 
 ```{python}
 #| label: fig-all-points
-#| fig-cap: "Every shop-day in the file (250 points). Orange = you were there; blue = you were not. Jitter helps overlapping points show."
+#| fig-cap: "Each dot is one shop-day (250 total). Orange = you were on site; blue = you were not. Dots are spread sideways slightly so you can see pile-ups."
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -56,20 +64,20 @@ ax.set_xticks(shops)
 ax.set_xticklabels([str(int(s)) for s in shops])
 ax.set_xlabel("Shop")
 ax.set_ylabel("Cars fixed that day")
-ax.set_title("Productivity by shop and whether you were on site")
+ax.set_title("Cars fixed per day when you were there vs not there")
 handles = [
-    Line2D([0], [0], marker="o", color="w", label="You not there", markerfacecolor=absent_color, markersize=9),
-    Line2D([0], [0], marker="o", color="w", label="You there", markerfacecolor=present_color, markersize=9),
+    Line2D([0], [0], marker="o", color="w", label="You were not there", markerfacecolor=absent_color, markersize=9),
+    Line2D([0], [0], marker="o", color="w", label="You were on site", markerfacecolor=present_color, markersize=9),
 ]
 ax.legend(handles=handles, loc="upper left", frameon=True)
 plt.tight_layout()
 ```
 
-@tbl-lift summarizes average cars with and without you, and the **lift** (extra cars per day when you are there, on average).
+@tbl-lift is the scorecard: for each shop, **average cars on days you were there** versus **average cars on days you were not**, and the **extra cars per day** when you show up (the difference).
 
 ```{python}
 #| label: tbl-lift
-#| tbl-cap: "Average cars fixed when you are absent vs present, and the lift (present minus absent) by shop."
+#| tbl-cap: "Per shop: how many days fall in each bucket, average cars when you were away vs on site, and extra cars per day when you are there."
 
 def lift_table(df):
     g = df.groupby(["shopID", "boss"])["carsFixed"].agg(["count", "mean"]).unstack("boss")
@@ -81,17 +89,19 @@ def lift_table(df):
 lift_table(carsDF)
 ```
 
-**Plain English read:** Shops **4** and **2** show the largest lift. Shop **3** shows a small lift. That does not mean Shop 3 is “bad”—it means **your presence there does not move the needle as much** as it does at 4 and 2.
+**How to read it:** Shops **4** and **2** show the largest **extra cars per day** when you are there. Shop **3** shows a small bump. Again: small bump at 3 is about **your impact when you visit**, not whether the crew there is any good.
 
 ---
 
-## How confident can you be?
+## How sure can we be?
 
-We only have **50** calendar days and **250** shop‑days. Worse, you were only recorded as “present” a handful of times at some shops (see the `n_present` column in @tbl-lift). With small counts, one busy week can skew averages.
+Fifty days is a start, not a lifetime of data. At some shops, **“Patrick was here”** only happened a few times in the file (see how many days are in each column in @tbl-lift). When the counts are low, **one unusually busy or slow stretch** can pull the averages up or down.
+
+The next chart is our way of saying **“the truth might sit somewhere in this band.”** We ran a standard statistical check (resampling the days you do have) to draw a **range** for the “extra cars when you are there” number. You do not need the math—just know: **wider range = we are less sure**, often because we rarely saw you at that shop in this dataset.
 
 ```{python}
 #| label: fig-bootstrap-lift
-#| fig-cap: "Bootstrap ranges (middle 90%) for 'extra cars when you are there' at each shop. Wider bars mean more uncertainty—often because you were rarely present in the data."
+#| fig-cap: "For each shop, a likely range for 'extra cars when Patrick is there.' Long horizontal bars mean the number could be higher or lower than the dot—we have fewer comparable days."
 rng = np.random.default_rng(42)
 
 def bootstrap_lift(df, shop, n_boot=8000):
@@ -128,30 +138,34 @@ ax.errorbar(
 ax.axvline(0, color="#bdc3c7", linestyle="--", linewidth=1)
 ax.set_yticks(y)
 ax.set_yticklabels([f"Shop {i}" for i in y])
-ax.set_xlabel("Extra cars per day when you are there (90% range)")
-ax.set_title("Uncertainty: where the lift is fuzzy vs clearer")
+ax.set_xlabel("Extra cars per day when you are there (likely range)")
+ax.set_title("How fuzzy is each shop's 'extra cars when Patrick is there'?")
 plt.tight_layout()
 ```
 
-**What could go wrong?** The future may not match the past. Competitors, staffing, seasonality, and luck all matter. The main assumption here is that **past “you there” days are a fair preview of future “you there” days** at each shop.
+**Reality check:** Next month could look different from last month:parts delays, who called in sick, weather, competition. This report assumes **a day with you there in the past is a fair guess at a day with you there in the future** for that same shop. That is reasonable for planning, but it is not a crystal ball.
 
 ---
 
-## What you should do
+## Recommendations (for you, running the business)
 
-1. **Prioritize presence at Shops 4 and 2** when the goal is to maximize extra cars from your visits.  
-2. **Do not read Shop 3’s small lift as “skip family.”** It means that if you have a fixed number of “Patrick on the floor” days, **moving some of those days from 3 to 4 or 2 is where the spreadsheet moves most.**  
-3. **Keep watching the numbers** as you get more “you there” days at 4 and 2—those averages will stabilize.
+1. **When you want your days on the floor to pull the most weight**, lean toward **Shops 4 and 2** first, those are where the data shows the **biggest gain in cars completed** on days you are there.  
+2. **Shop 3 is not “the problem shop.”** The data only says your physical presence there **does not add as many extra cars** as it does at 4 and 2. If you only have so many days a year to be in the bays, **shifting some of those days from 3 toward 4 or 2 is where the count moves most.**  
+3. **Keep tracking this** as you log more “Patrick was here” days, especially at 4 and 2. More weeks of data will make the averages **steadier and easier to trust**.
 
 ---
 
-## Money picture (illustration only)
+## Money picture (rough illustration only)
 
-Pick a dollar amount per car so the math is easy to follow. If you use **\$200 revenue per car** (change this to your real number), then **one extra car per day** is about **\$73,000/year** if it happened five days a week for 52 weeks (`200 * 5 * 52`). That is not a promise—just a way to turn “cars” into “money in your head.”
+Cars turn into rent and payroll when you multiply by **what you actually average per car**—use your books, not our placeholder.
+
+The table below uses **\$200 per car** only as a simple example. It asks: *if the “extra cars when you are there” pattern showed up on **one day each week** for a full year*, what would that rough revenue look like? That matches the math in the table (`extra cars × \$200 × 52 weeks`). It is **not** a guarantee—just a way to picture size.
+
+**Quick mental math (optional):** If you prefer to think in **five shop days a week**, each extra car per day at \$200 is about **\$52,000/year** (`200 × 5 × 52`). Same idea: plug your real dollar per car.
 
 ```{python}
 #| label: tbl-money
-#| tbl-cap: "Illustrative annual revenue from the lift, if that lift happened one extra day per week all year, at $200 per car (adjust to your actual ticket)."
+#| tbl-cap: "Rough annual dollars if the 'extra cars when Patrick is there' pattern happened one day per week all year, at $200 per car—swap in your real average ticket."
 
 PRICE = 200
 DAYS_PER_YEAR = 52  # one day per week illustration
@@ -170,13 +184,15 @@ money.rename(
 
 ---
 
-## Future look: simple scheduling scenarios
+## Future look: “what if I spend those days somewhere else?”
 
-@fig-scenarios shows a **what‑if**: if in a year you **moved** some of your on‑site days from Shop 3 to another shop, how many **extra cars** that could add, using the lifts we measured. This is not a full simulator—it is a transparent back‑of‑the‑envelope so you can see direction and scale.
+@fig-scenarios is a **simple story problem**, not precision forecasting. It says: *Suppose over a year you took **20 days** you would have spent at Shop 3 and worked those days at Shop 4, 2, or 5 instead.* How many **extra cars for the year** might that add, using the patterns we already saw?
+
+The bars show **order of magnitude** (more vs less), not a promise. If you start visiting one shop way more often, the shop’s rhythm can change—this is a starting point for conversation, not a contract.
 
 ```{python}
 #| label: fig-scenarios
-#| fig-cap: "Rough extra cars per year if you move 'presence days' from Shop 3 to another shop (uses observed lift gap × days moved). Bars are optimistic if lifts change when you visit more often."
+#| fig-cap: "Rough extra cars per year if 20 of your Shop 3 days moved to another shop (based on the gaps we measured). Treat as directional, not exact."
 
 def lift_for_shop(df, shop):
     a = df[(df.shopID == shop) & (df.boss == 0)]["carsFixed"].mean()
@@ -198,8 +214,8 @@ names = list(scenarios.keys())
 vals = list(scenarios.values())
 colors = ["#95a5a6", "#e74c3c", "#e67e22", "#3498db"]
 ax.barh(names, vals, color=colors)
-ax.set_xlabel("Approx. extra cars per year (illustrative)")
-ax.set_title("Scenario sketch: reallocate presence days away from Shop 3")
+ax.set_xlabel("Rough extra cars per year (illustrative)")
+ax.set_title("What if 20 Shop 3 days moved to another location?")
 for i, v in enumerate(vals):
     ax.text(v + max(vals) * 0.02, i, f"{v:.0f}", va="center", fontsize=11)
 plt.tight_layout()
@@ -209,4 +225,8 @@ plt.tight_layout()
 
 ## Closing
 
-**Bottom line:** the data says your presence **matters most at Shops 4 and 2**, and **least at Shop 3** in terms of extra cars per visit. Use that to steer your calendar, stay humble about sample size, and update this picture as you collect more balanced weeks at each location.
+**Outcomes:** On days we could compare, **Shops 4 and 2** pick up the most extra cars when you are on the floor. **Shop 3** picks up the least.
+
+**Results you can use:** When you are deciding **where to put your own boots-on-the-ground days**, lean toward **4 and 2** if the goal is to move the car count. Keep logging visits so the picture gets clearer over time.
+
+**Recommendations:** (1) **Calendar:** favor 4 and 2 for high-impact days when you can. (2) **Shop 3:** no issues with performance or loyalty, just know the numbers say **fewer extra cars per visit** there. (3) **Next step:** add more weeks of data and rerun this so the averages are built on more “Patrick was here” days at each location.
