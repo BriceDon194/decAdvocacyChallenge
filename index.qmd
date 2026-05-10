@@ -168,7 +168,7 @@ ax.axvline(0, color="#bdc3c7", linestyle="--", linewidth=1)
 ax.set_yticks(y)
 ax.set_yticklabels([f"Shop {i}" for i in y])
 ax.set_xlabel("Extra cars per day when you are there (likely range)")
-ax.set_title("How fuzzy is each shop's 'extra cars when Patrick is there'?")
+ax.set_title("Average Increase in Cars Serviced When You are at a Shop")
 plt.tight_layout()
 ```
 
