@@ -50,7 +50,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#executive-summary-plain-english" id="toc-executive-summary-plain-english" class="nav-link active" data-scroll-target="#executive-summary-plain-english">Executive summary (plain English)</a></li>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link active" data-scroll-target="#executive-summary">Executive summary</a></li>
   <li><a href="#what-we-measured" id="toc-what-we-measured" class="nav-link" data-scroll-target="#what-we-measured">What we measured</a></li>
   <li><a href="#how-sure-can-we-be" id="toc-how-sure-can-we-be" class="nav-link" data-scroll-target="#how-sure-can-we-be">How sure can we be?</a></li>
   <li><a href="#recommendations-for-you-running-the-business" id="toc-recommendations-for-you-running-the-business" class="nav-link" data-scroll-target="#recommendations-for-you-running-the-business">Recommendations (for you, running the business)</a></li>
@@ -82,14 +82,14 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="executive-summary-plain-english" class="level2">
-<h2 class="anchored" data-anchor-id="executive-summary-plain-english">Executive summary (plain English)</h2>
+<section id="executive-summary" class="level2">
+<h2 class="anchored" data-anchor-id="executive-summary">Executive summary</h2>
 <p>Patrick, you wanted to know: <strong>if you spend a day at one location instead of another, where does your being there actually show up in the work count?</strong></p>
 <p>We looked at <strong>50 days</strong> of records across <strong>five shops</strong>. Think of that as <strong>250 separate snapshots</strong>: each snapshot is “one shop, one day,” with how many cars got finished that day and whether you were on site.</p>
 <p><strong>What we found</strong></p>
 <ul>
 <li><strong>Shops 4 and 2</strong> are where your visits line up with the <strong>biggest bump</strong> in cars completed versus days you were not there.</li>
-<li><strong>Shop 3</strong> shows the <strong>smallest bump</strong>. That does <strong>not</strong> mean Shop 3 is a bad shop or that you should feel guilty about family there—it means <strong>your time on the floor moves the needle least there</strong>, compared with 4 and 2.</li>
+<li><strong>Shop 3</strong> shows the <strong>smallest bump</strong>. That does <strong>not</strong> mean Shop 3 is a bad shop or that you should feel guilty. It means <strong>your time on the floor has the least impact on number of serviced cars</strong>, compared with 4 and 2.</li>
 </ul>
 <p><strong>How seriously to take the exact numbers</strong></p>
 <p>You were not recorded at every shop equally often. Some locations only have a few “Patrick was here” days in this file. So treat the figures as <strong>rough guides</strong>, not promises. They still tell a useful story about <strong>where your presence shows up most</strong>.</p>
@@ -97,7 +97,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="what-we-measured" class="level2">
 <h2 class="anchored" data-anchor-id="what-we-measured">What we measured</h2>
-<p>Each dot in <a href="#fig-all-points" class="quarto-xref">Figure&nbsp;1</a> is <strong>one shop, one day</strong>: how many cars were fixed that day, and whether you were there. (The dots are nudged slightly left or right so overlapping points do not stack on top of each other—that is all “jitter” means.)</p>
+<p>Each dot in <a href="#fig-all-points" class="quarto-xref">Figure&nbsp;1</a> is <strong>one shop, one day</strong>: how many cars were fixed that day, and whether you were there.</p>
 <div id="cell-fig-all-points" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div id="fig-all-points" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -112,7 +112,7 @@ Figure&nbsp;1: Each dot is one shop-day (250 total). Orange = you were on site; 
 </div>
 </div>
 </div>
-<p><a href="#tbl-lift" class="quarto-xref">Table&nbsp;1</a> is the scorecard: for each shop, <strong>average cars on days you were there</strong> versus <strong>average cars on days you were not</strong>, and the <strong>extra cars per day</strong> when you show up (the difference).</p>
+<p><a href="#tbl-lift" class="quarto-xref">Table&nbsp;1</a> is the scorecard: for each shop, it compares <strong>cars finished on days you were not there</strong> vs <strong>days you were on site</strong>, then shows the <strong>difference</strong> as your estimated day-level impact.</p>
 <div class="cell" data-execution_count="2">
 <div id="tbl-lift" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="2">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -128,11 +128,11 @@ Table&nbsp;1: Per shop: how many days fall in each bucket, average cars when you
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">n_absent</th>
-<th data-quarto-table-cell-role="th">mean_absent</th>
-<th data-quarto-table-cell-role="th">n_present</th>
-<th data-quarto-table-cell-role="th">mean_present</th>
-<th data-quarto-table-cell-role="th">lift_cars_per_day</th>
+<th data-quarto-table-cell-role="th">Days observed (you not there)</th>
+<th data-quarto-table-cell-role="th">Avg cars/day (you not there)</th>
+<th data-quarto-table-cell-role="th">Days observed (you on site)</th>
+<th data-quarto-table-cell-role="th">Avg cars/day (you on site)</th>
+<th data-quarto-table-cell-role="th">Estimated extra cars/day when you are on site</th>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">shopID</th>
@@ -193,6 +193,14 @@ Table&nbsp;1: Per shop: how many days fall in each bucket, average cars when you
 </figure>
 </div>
 </div>
+<p><strong>Table 1 legend (what each column measures):</strong></p>
+<ul>
+<li><strong>Days observed (you not there):</strong> Number of shop-days in the dataset where you were not on site.</li>
+<li><strong>Avg cars/day (you not there):</strong> Average number of cars finished on those not-on-site days.</li>
+<li><strong>Days observed (you on site):</strong> Number of shop-days where you were on site.</li>
+<li><strong>Avg cars/day (you on site):</strong> Average number of cars finished on on-site days.</li>
+<li><strong>Estimated extra cars/day when you are on site:</strong> Difference between the two averages above; positive means more cars were finished on days you were present.</li>
+</ul>
 <p><strong>How to read it:</strong> Shops <strong>4</strong> and <strong>2</strong> show the largest <strong>extra cars per day</strong> when you are there. Shop <strong>3</strong> shows a small bump. Again: small bump at 3 is about <strong>your impact when you visit</strong>, not whether the crew there is any good.</p>
 <hr>
 </section>
@@ -214,15 +222,15 @@ Figure&nbsp;2: For each shop, a likely range for ‘extra cars when Patrick is t
 </div>
 </div>
 </div>
-<p><strong>Reality check:</strong> Next month could look different from last month—parts delays, who called in sick, weather, competition. This report assumes <strong>a day with you there in the past is a fair guess at a day with you there in the future</strong> for that same shop. That is reasonable for planning, but it is not a crystal ball.</p>
+<p><strong>Reality check:</strong> Next month could look different from last month:parts delays, who called in sick, weather, competition. This report assumes <strong>a day with you there in the past is a fair guess at a day with you there in the future</strong> for that same shop. That is reasonable for planning, but it is not a crystal ball.</p>
 <hr>
 </section>
 <section id="recommendations-for-you-running-the-business" class="level2">
 <h2 class="anchored" data-anchor-id="recommendations-for-you-running-the-business">Recommendations (for you, running the business)</h2>
 <ol type="1">
-<li><strong>When you want your days on the floor to pull the most weight</strong>, lean toward <strong>Shops 4 and 2</strong> first—those are where the data shows the <strong>biggest gain in cars completed</strong> on days you are there.<br>
+<li><strong>When you want your days on the floor to pull the most weight</strong>, lean toward <strong>Shops 4 and 2</strong> first, those are where the data shows the <strong>biggest gain in cars completed</strong> on days you are there.<br>
 </li>
-<li><strong>Shop 3 is not “the problem shop.”</strong> The data only says your physical presence there <strong>does not add as many extra cars</strong> as it does at 4 and 2. If you only have so many days a year to be in the bays, <strong>shifting some of those days from 3 toward 4 or 2 is where the count moves most</strong>—without saying anything bad about the people at 3.<br>
+<li><strong>Shop 3 is not “the problem shop.”</strong> The data only says your physical presence there <strong>does not add as many extra cars</strong> as it does at 4 and 2. If you only have so many days a year to be in the bays, <strong>shifting some of those days from 3 toward 4 or 2 is where the count moves most.</strong><br>
 </li>
 <li><strong>Keep tracking this</strong> as you log more “Patrick was here” days, especially at 4 and 2. More weeks of data will make the averages <strong>steadier and easier to trust</strong>.</li>
 </ol>
@@ -230,68 +238,8 @@ Figure&nbsp;2: For each shop, a likely range for ‘extra cars when Patrick is t
 </section>
 <section id="money-picture-rough-illustration-only" class="level2">
 <h2 class="anchored" data-anchor-id="money-picture-rough-illustration-only">Money picture (rough illustration only)</h2>
-<p>Cars turn into rent and payroll when you multiply by <strong>what you actually average per car</strong>—use your books, not our placeholder.</p>
-<p>The table below uses <strong>$200 per car</strong> only as a simple example. It asks: <em>if the “extra cars when you are there” pattern showed up on <strong>one day each week</strong> for a full year</em>, what would that rough revenue look like? That matches the math in the table (<code>extra cars × \$200 × 52 weeks</code>). It is <strong>not</strong> a guarantee—just a way to picture size.</p>
-<p><strong>Quick mental math (optional):</strong> If you prefer to think in <strong>five shop days a week</strong>, each extra car per day at $200 is about <strong>$52,000/year</strong> (<code>200 × 5 × 52</code>). Same idea: plug your real dollar per car.</p>
-<div class="cell" data-execution_count="4">
-<div id="tbl-money" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="4">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-money-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;2: Rough annual dollars if the ‘extra cars when Patrick is there’ pattern happened one day per week all year, at $200 per car—swap in your real average ticket.
-</figcaption>
-<div aria-describedby="tbl-money-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="4">
-<div>
-
-
-<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">Lift (cars/day)</th>
-<th data-quarto-table-cell-role="th">Illustrative $/year (1 day/wk)</th>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">shopID</th>
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th"></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">1</th>
-<td>8.00</td>
-<td>83200.0</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">2</th>
-<td>27.20</td>
-<td>282880.0</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">3</th>
-<td>20.40</td>
-<td>212160.0</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">4</th>
-<td>44.80</td>
-<td>465920.0</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">5</th>
-<td>38.73</td>
-<td>402792.0</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</figure>
-</div>
-</div>
+<p>Cars turn into rent and payroll based on your real average dollars per car, so treat this section as a sizing tool rather than a forecast.</p>
+<p>The table below uses <strong>$200 per car</strong> only as an illustration. It shows the <strong>rough annual dollar size</strong> associated with each shop’s “extra cars when you are on site” pattern if that pattern appeared about one day per week across a year. Use it to compare magnitude across shops, then swap in your real average ticket to make it business-ready.</p>
 <hr>
 </section>
 <section id="future-look-what-if-i-spend-those-days-somewhere-else" class="level2">
@@ -316,9 +264,9 @@ Figure&nbsp;3: Rough extra cars per year if 20 of your Shop 3 days moved to anot
 </section>
 <section id="closing" class="level2">
 <h2 class="anchored" data-anchor-id="closing">Closing</h2>
-<p><strong>Outcomes:</strong> On days we could compare, <strong>Shops 4 and 2</strong> pick up the most extra cars when you are on the floor. <strong>Shop 3</strong> picks up the least—again, that is about <strong>your visit</strong>, not a grade on the staff.</p>
+<p><strong>Outcomes:</strong> On days we could compare, <strong>Shops 4 and 2</strong> pick up the most extra cars when you are on the floor. <strong>Shop 3</strong> picks up the least.</p>
 <p><strong>Results you can use:</strong> When you are deciding <strong>where to put your own boots-on-the-ground days</strong>, lean toward <strong>4 and 2</strong> if the goal is to move the car count. Keep logging visits so the picture gets clearer over time.</p>
-<p><strong>Recommendations:</strong> (1) <strong>Calendar:</strong> favor 4 and 2 for high-impact days when you can. (2) <strong>Shop 3:</strong> no shame in family or loyalty—just know the numbers say <strong>fewer extra cars per visit</strong> there. (3) <strong>Next step:</strong> add more weeks of data and rerun this so the averages are built on more “Patrick was here” days at each location.</p>
+<p><strong>Recommendations:</strong> (1) <strong>Calendar:</strong> favor 4 and 2 for high-impact days when you can. (2) <strong>Shop 3:</strong> no issues with performance or loyalty, just know the numbers say <strong>fewer extra cars per visit</strong> there. (3) <strong>Next step:</strong> add more weeks of data and rerun this so the averages are built on more “Patrick was here” days at each location.</p>
 </section>
 
 </main>

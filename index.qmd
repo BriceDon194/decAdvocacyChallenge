@@ -73,21 +73,50 @@ ax.legend(handles=handles, loc="upper left", frameon=True)
 plt.tight_layout()
 ```
 
-@tbl-lift is the scorecard: for each shop, **average cars on days you were there** versus **average cars on days you were not**, and the **extra cars per day** when you show up (the difference).
+@tbl-lift is the scorecard: for each shop, it compares **cars finished on days you were not there** vs **days you were on site**, then shows both the **difference in cars/day** and the **percent increase** as your estimated day-level impact.
 
 ```{python}
 #| label: tbl-lift
-#| tbl-cap: "Per shop: how many days fall in each bucket, average cars when you were away vs on site, and extra cars per day when you are there."
+#| tbl-cap: "Per shop: whole-number day counts, average cars when you were away vs on site, extra cars/day when you are there, and estimated percent increase."
 
 def lift_table(df):
     g = df.groupby(["shopID", "boss"])["carsFixed"].agg(["count", "mean"]).unstack("boss")
     g.columns = ["n_absent", "mean_absent", "n_present", "mean_present"]
     g["lift_cars_per_day"] = g["mean_present"] - g["mean_absent"]
-    out = g[["n_absent", "mean_absent", "n_present", "mean_present", "lift_cars_per_day"]].round(2)
+    # Percent lift relative to days when Patrick was not on site
+    g["lift_percent"] = np.where(
+        g["mean_absent"] != 0,
+        (g["lift_cars_per_day"] / g["mean_absent"]) * 100,
+        np.nan,
+    )
+    out = g[["n_absent", "mean_absent", "n_present", "mean_present", "lift_cars_per_day", "lift_percent"]].copy()
+    out[["n_absent", "n_present"]] = out[["n_absent", "n_present"]].astype(int)
+    out[["mean_absent", "mean_present", "lift_cars_per_day", "lift_percent"]] = out[
+        ["mean_absent", "mean_present", "lift_cars_per_day", "lift_percent"]
+    ].round(2)
+    out = out.rename(
+        columns={
+            "n_absent": "Days observed (you not there)",
+            "mean_absent": "Avg cars/day (you not there)",
+            "n_present": "Days observed (you on site)",
+            "mean_present": "Avg cars/day (you on site)",
+            "lift_cars_per_day": "Estimated extra cars/day when you are on site",
+            "lift_percent": "Estimated % increase when you are on site",
+        }
+    )
     return out
 
 lift_table(carsDF)
 ```
+
+**Table 1 legend (what each column measures):**
+
+- **Days observed (you not there):** Number of shop-days in the dataset where you were not on site.
+- **Avg cars/day (you not there):** Average number of cars finished on those not-on-site days.
+- **Days observed (you on site):** Number of shop-days where you were on site.
+- **Avg cars/day (you on site):** Average number of cars finished on on-site days.
+- **Estimated extra cars/day when you are on site:** Difference between the two averages above; positive means more cars were finished on days you were present.
+- **Estimated % increase when you are on site:** The extra cars/day divided by the not-on-site average, shown as a percentage.
 
 **How to read it:** Shops **4** and **2** show the largest **extra cars per day** when you are there. Shop **3** shows a small bump. Again: small bump at 3 is about **your impact when you visit**, not whether the crew there is any good.
 
@@ -157,11 +186,9 @@ plt.tight_layout()
 
 ## Money picture (rough illustration only)
 
-Cars turn into rent and payroll when you multiply by **what you actually average per car**—use your books, not our placeholder.
+Cars turn into rent and payroll based on your real average dollars per car, so treat this section as a sizing tool rather than a forecast.
 
-The table below uses **\$200 per car** only as a simple example. It asks: *if the “extra cars when you are there” pattern showed up on **one day each week** for a full year*, what would that rough revenue look like? That matches the math in the table (`extra cars × \$200 × 52 weeks`). It is **not** a guarantee—just a way to picture size.
-
-**Quick mental math (optional):** If you prefer to think in **five shop days a week**, each extra car per day at \$200 is about **\$52,000/year** (`200 × 5 × 52`). Same idea: plug your real dollar per car.
+The table below uses **\$200 per car** only as an illustration. It shows the **rough annual dollar size** associated with each shop's "extra cars when you are on site" pattern if that pattern appeared about one day per week across a year. Use it to compare magnitude across shops, then swap in your real average ticket to make it business-ready.
 
 ```{python}
 #| label: tbl-money
@@ -170,13 +197,13 @@ The table below uses **\$200 per car** only as a simple example. It asks: *if th
 PRICE = 200
 DAYS_PER_YEAR = 52  # one day per week illustration
 
-money = lift_table(carsDF)[["lift_cars_per_day"]].copy()
+money = lift_table(carsDF)[["Estimated extra cars/day when you are on site"]].copy()
 money["illustrative_annual_if_1_day_per_week"] = (
-    money["lift_cars_per_day"] * PRICE * DAYS_PER_YEAR
+    money["Estimated extra cars/day when you are on site"] * PRICE * DAYS_PER_YEAR
 ).round(0)
-money.rename(
+money = money.rename(
     columns={
-        "lift_cars_per_day": "Lift (cars/day)",
+        "Estimated extra cars/day when you are on site": "Lift (cars/day)",
         "illustrative_annual_if_1_day_per_week": "Illustrative $/year (1 day/wk)",
     }
 )
